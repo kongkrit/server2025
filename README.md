@@ -148,12 +148,89 @@ mount | grep mnt
 ```
 should return
 ```bash
-zroot/ROOT/ubuntu on /mnt type zfs (rw,relatime,xattr,posixacl)
-zroot/home on /mnt/home type zfs (rw,relatime,xattr,posixacl)
+zroot/ROOT/ubuntu on /mnt type zfs (rw,noatime,xattr,posixacl)
+zroot/home on /mnt/home type zfs (rw,noatime,xattr,posixacl)
 ```
 #### Update device symlinks
 ```bash
 udevadm trigger
 ```
 
+</details>
+<details>
+<summary>Install Ubuntu</summary>
+
+```bash
+debootstrap noble /mnt
+```
+### Copy files into the new install
+```bash
+cp /etc/hostid /mnt/etc
+cp /etc/resolv.conf /mnt/etc
+```
+### Chroot into the new OS
+```bash
+mount -t proc proc /mnt/proc
+mount -t sysfs sys /mnt/sys
+mount -B /dev /mnt/dev
+mount -t devpts pts /mnt/dev/pts
+chroot /mnt /bin/bash
+```
+
+</details>
+<details>
+<summary>Basic Ubuntu Configuration</summary>
+
+### Set a hostname
+```bash
+echo 'YOURHOSTNAME' > /etc/hostname
+echo -e '127.0.1.1\tYOURHOSTNAME' >> /etc/hosts
+```
+### Set a root password
+```bash
+passwd
+```
+### Configure apt. Use other mirrors if you prefer.
+```bash
+cat <<EOF > /etc/apt/sources.list
+# Uncomment the deb-src entries if you need source packages
+
+deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse
+
+deb http://archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ noble-updates main restricted universe multiverse
+
+deb http://archive.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
+
+deb http://archive.ubuntu.com/ubuntu/ noble-backports main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu/ noble-backports main restricted universe multiverse
+EOF
+```
+### Update the repository cache and system
+```bash
+apt update
+apt upgrade
+```
+###Install additional base packages
+```
+apt install --no-install-recommends linux-generic locales keyboard-configuration console-setup
+```
+> [!NOTE]
+> The `--no-install-recommends` flag is used here to avoid installing recommended, but not strictly needed, packages (including `grub2`).
+
+### Configure packages to customize local and console properties
+```bash
+dpkg-reconfigure locales tzdata keyboard-configuration console-setup
+```
+
+> [!NOTE]
+> You should always enable the en_US.UTF-8 locale because some programs require it.
+
+> [!NOTE]
+> See also
+>
+> Any additional software should be selected and installed at this point. A basic debootstrap installation is very limited, lacking several packages that might be expected from an interactive installation.
+  
 </details>
