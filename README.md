@@ -92,6 +92,30 @@ sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" "$POOL_DISK2"
 <details>
 <summary>ZFS pool creation</summary>
 
-## ZFS pool creation
 ### Create the zpool
+#### export pool parameters
+```bash
+export ZPOOL_ASHIFT="13"
+export ZFS_COMPRESSION="lz4"
+```
+#### create pool
+```bash
+zpool create -f \
+  -o ashift="$ZPOOL_ASHIFT" \
+  -o autotrim=on \
+  -o compatibility=openzfs-2.1-linux \
+  -O acltype=posixacl \
+  -O canmount=off \
+  -O compression="$ZFS_COMPRESSION" \
+  -O dnodesize=auto \
+  -O normalization=formD \
+  -O atime=off \
+  -O xattr=sa \
+  -m none \
+  zroot mirror "$POOL_DEVICE1" "$POOL_DEVICE2"
+```
+The option `-o compatibility=openzfs-2.1-linux` is a conservative choice. It can be omitted or otherwise adjusted to match your specific system needs.
+
+Binary releases of ZFSBootMenu are generally built with the latest stable release of ZFS. Future releases of ZFSBootMenu may therefore support newer feature sets. Check project release notes prior to updating or removing `compatibility` options and upgrading your system pool.
+
 </details>
