@@ -62,7 +62,6 @@ export POOL_DEVICE2="${POOL_DISK2}-part${POOL_PART}"
 <details>
 <summary>Disk preparation</summary>
 
-## Disk preparation
 ### Wipe partitions
 ```bash
 zpool labelclear -f "$POOL_DISK1"
@@ -79,11 +78,11 @@ sgdisk --zap-all "$POOL_DISK2"
 sgdisk --zap-all "$BOOT_DISK"
 ```
 ### Create EFI boot partition
-```
+```bash
 sgdisk -n "${BOOT_PART}:1m:+512m" -t "${BOOT_PART}:ef00" "$BOOT_DISK"
 ```
 ### Create zpool partition
-```
+```bash
 sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" "$POOL_DISK1"
 sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" "$POOL_DISK2"
 ```
@@ -114,8 +113,47 @@ zpool create -f \
   -m none \
   zroot mirror "$POOL_DEVICE1" "$POOL_DEVICE2"
 ```
-The option `-o compatibility=openzfs-2.1-linux` is a conservative choice. It can be omitted or otherwise adjusted to match your specific system needs.
+> [!NOTE]
+> The option `-o compatibility=openzfs-2.1-linux` is a conservative choice. It can be omitted or otherwise adjusted to match your specific system needs.
+>
+> Binary releases of ZFSBootMenu are generally built with the latest stable release of ZFS. Future releases of ZFSBootMenu may therefore support newer feature sets. Check project release notes prior to updating or removing `compatibility` options and upgrading your system pool.
 
-Binary releases of ZFSBootMenu are generally built with the latest stable release of ZFS. Future releases of ZFSBootMenu may therefore support newer feature sets. Check project release notes prior to updating or removing `compatibility` options and upgrading your system pool.
+</details>
+<details>
+<summary>Create initial file systems</summary>
+  
+```bash
+zfs create -o mountpoint=none zroot/ROOT
+zfs create -o mountpoint=/ -o canmount=noauto zroot/ROOT/${ID}
+zfs create -o mountpoint=/home zroot/home
+
+zpool set bootfs=zroot/ROOT/${ID} zroot
+```
+
+> [!NOTE]
+> It is important to set the property `canmount=noauto` on any file systems with `mountpoint=/` (that is, on any additional boot environments you create). Without this property, the OS will attempt to automount all ZFS file systems and fail when multiple file systems attempt to mount at `/`; this will prevent your system from booting. Automatic mounting of `/` is not required because the root file system is explicitly mounted in the boot process.
+>
+> Also note that, unlike many ZFS properties, `canmount` is not inheritable. Therefore, setting `canmount=noauto` on `zroot/ROOT` is not sufficient, as any subsequent boot environments you create will default to `canmount=on`. It is necessary to explicitly set the `canmount=noauto` on every boot environment you create.
+
+#### Export, then re-import with a temporary mountpoint of /mnt
+```bash
+zpool export zroot
+zpool import -N -R /mnt zroot
+zfs mount zroot/ROOT/${ID}
+zfs mount zroot/home
+```
+#### Verify that everything is mounted correctly
+```bash
+mount | grep mnt
+```
+should return
+```bash
+zroot/ROOT/ubuntu on /mnt type zfs (rw,relatime,xattr,posixacl)
+zroot/home on /mnt/home type zfs (rw,relatime,xattr,posixacl)
+```
+#### Update device symlinks
+```bash
+udevadm trigger
+```
 
 </details>
