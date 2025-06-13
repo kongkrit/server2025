@@ -234,6 +234,7 @@ apt install --no-install-recommends wget nano git make man-db
 		  ethernets:
 		    $ethernetinterface:
 		      dhcp4: yes
+        EOF
 ```
 ### TODO: Install openssh-server
 ```bash
