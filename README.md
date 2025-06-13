@@ -361,6 +361,24 @@ efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
 
 </details>
 <details>
+<summary>TODO: set up non-root user</summary>
+
+```
+usersetup(){
+	##6.6 create user account and setup groups
+	zfs create -o mountpoint=/home/"$user" "$RPOOL"/home/${user}
+
+	##gecos parameter disabled asking for finger info
+	adduser --disabled-password --gecos "" "$user"
+	cp -a /etc/skel/. /home/"$user"
+	chown -R "$user":"$user" /home/"$user"
+	usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$user"
+	printf $PASSWORD"\n"$PASSWORD | passwd $user
+}
+```
+
+</details>
+<details>
 <summary>Prepare for first boot</summary>
 
 ### Exit the chroot, unmount everything
