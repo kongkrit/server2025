@@ -214,8 +214,33 @@ apt update
 apt upgrade
 ```
 ### Install additional base packages
-```
+```bash
 apt install --no-install-recommends linux-generic locales keyboard-configuration console-setup
+```
+### Install additional not-so-base packages
+```bash
+apt install --no-install-recommends wget nano git make man-db
+```
+### TODO: netplan DHCP setup
+```bash
+	##get ethernet interface
+	ethernetinterface="$(basename "$(find /sys/class/net -maxdepth 1 -mindepth 1 -name "${ethprefix}*")")"
+	echo "$ethernetinterface"
+		
+	##troubleshoot: sudo netplan --debug generate
+	cat > "$mountpoint"/etc/netplan/01-"$ethernetinterface".yaml <<-EOF
+		network:
+		  version: 2
+		  ethernets:
+		    $ethernetinterface:
+		      dhcp4: yes
+```
+### TODO: Install openssh-server
+```bash
+			apt install -y openssh-server
+			if [ "$allow_root_ssh_with_password" = "yes" ]; then
+				sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
+			fi
 ```
 > [!NOTE]
 > The `--no-install-recommends` flag is used here to avoid installing recommended, but not strictly needed, packages (including `grub2`).
