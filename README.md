@@ -221,9 +221,54 @@ apt install --no-install-recommends linux-generic locales keyboard-configuration
 > The `--no-install-recommends` flag is used here to avoid installing recommended, but not strictly needed, packages (including `grub2`).
 
 ### Configure packages to customize local and console properties
+<details>
+<summary>UI way</summary>
+  
 ```bash
 dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 ```
+
+</details>
+<details>
+<summary>Scripted way</summary>
+  
+#### set locale for `en_US.UTF-8`
+```bash
+echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
+echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
+dpkg-reconfigure -f noninteractive locales
+```
+#### Set Time Zone to `Asia/Bangkok`
+```bash
+echo "tzdata tzdata/Areas select Asia" | debconf-set-selections
+echo "tzdata tzdata/Zones/Asia select Bangkok" | debconf-set-selections
+dpkg-reconfigure -f noninteractive tzdata
+```
+#### Set keyboard to `us` qwerty
+```bash
+echo "keyboard-configuration keyboard-configuration/layoutcode string us" | debconf-set-selections
+dpkg-reconfigure -f noninteractive keyboard-configuration
+```
+
+</details>
+<details>
+<summary>Check locale, timezone, and keyboard</summary>
+
+#### check locale
+```bash
+locale
+```
+#### check timezone
+```bash
+timedatectl
+```
+#### check keyboar layout
+```bash
+cat /etc/default/keyboard
+```
+
+</details>
+
 
 > [!NOTE]
 > You should always enable the `en_US.UTF-8` locale because some programs require it.
