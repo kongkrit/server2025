@@ -183,14 +183,14 @@ chroot /mnt /bin/bash
 
 ### Set a hostname
 ```bash
-echo 'YOURHOSTNAME' > /etc/hostname
-echo -e '127.0.1.1\tYOURHOSTNAME' >> /etc/hosts
+echo 'serveru' > /etc/hostname
+echo -e '127.0.1.1\tserveru' >> /etc/hosts
 ```
 ### Set a root password
 ```bash
 passwd
 ```
-### Configure apt. Use other mirrors if you prefer.
+### Configure `apt`. Use other mirrors if you prefer.
 ```bash
 cat <<EOF > /etc/apt/sources.list
 # Uncomment the deb-src entries if you need source packages
@@ -213,7 +213,7 @@ EOF
 apt update
 apt upgrade
 ```
-###Install additional base packages
+### Install additional base packages
 ```
 apt install --no-install-recommends linux-generic locales keyboard-configuration console-setup
 ```
@@ -226,11 +226,111 @@ dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 ```
 
 > [!NOTE]
-> You should always enable the en_US.UTF-8 locale because some programs require it.
+> You should always enable the `en_US.UTF-8` locale because some programs require it.
 
 > [!NOTE]
 > See also
 >
 > Any additional software should be selected and installed at this point. A basic debootstrap installation is very limited, lacking several packages that might be expected from an interactive installation.
   
+</details>
+<details>
+<summary>ZFS Configuration</summary>
+
+### Install required packages
+```bash
+apt install dosfstools zfs-initramfs zfsutils-linux
+```
+### Enable systemd ZFS services
+```bash
+systemctl enable zfs.target
+systemctl enable zfs-import-cache
+systemctl enable zfs-mount
+systemctl enable zfs-import.target
+```
+### Configure `initramfs-tools`
+Unencrypted pool -> No required steps
+
+### Rebuild the initramfs
+```bash
+update-initramfs -c -k all
+```
+
+</details>
+<details>
+<summary>Install and configure ZFSBootMenu</summary>
+
+### Set ZFSBootMenu properties on datasets
+Assign command-line arguments to be used when booting the final kernel. Because ZFS properties are inherited, assign the common properties to the `ROOT` dataset so all children will inherit common arguments by default.
+```bash
+zfs set org.zfsbootmenu:commandline="quiet" zroot/ROOT
+```
+### Create a `vfat` filesystem
+```bash
+mkfs.vfat -F32 "$BOOT_DEVICE"
+```
+### Create an fstab entry and mount
+```bash
+cat << EOF >> /etc/fstab
+$( blkid | grep "$BOOT_DEVICE" | cut -d ' ' -f 2 ) /boot/efi vfat defaults 0 0
+EOF
+
+mkdir -p /boot/efi
+mount /boot/efi
+```
+### Install ZFSBootMenu
+**Prebuilt**
+```bash
+apt install curl
+```
+Fetch a prebuilt ZFSBootMenu EFI executable, saving it to the EFI system partition:
+```bash
+mkdir -p /boot/efi/EFI/ZBM
+curl -o /boot/efi/EFI/ZBM/VMLINUZ.EFI -L https://get.zfsbootmenu.org/efi
+cp /boot/efi/EFI/ZBM/VMLINUZ.EFI /boot/efi/EFI/ZBM/VMLINUZ-BACKUP.EFI
+```
+### Configure EFI boot entries
+```
+mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+```
+**Direct**
+```bash
+apt install efibootmgr
+```
+```bash
+efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
+  -L "ZFSBootMenu (Backup)" \
+  -l '\EFI\ZBM\VMLINUZ-BACKUP.EFI'
+```
+```bash
+efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
+  -L "ZFSBootMenu" \
+  -l '\EFI\ZBM\VMLINUZ.EFI'
+```
+> [!NOTE}
+> See also
+>
+> Some systems can have issues with EFI boot entries. If you reboot and do not see the above entries in your EFI selection screen (usually accessible through an F key during POST), you might need to use a well-known EFI file name. See [Portable EFI](https://docs.zfsbootmenu.org/en/v2.3.x/general/portable.html) for help with this. Your existing ESP can be used, in place of an external USB drive.
+>
+> Refer to [zbm-kcl.8](https://docs.zfsbootmenu.org/en/v2.3.x/man/zbm-kcl.8.html) and [zfsbootmenu.7](https://docs.zfsbootmenu.org/en/v2.3.x/man/zfsbootmenu.7.html) for details on configuring the boot-time behavior of ZFSBootMenu.
+
+</details>
+<details>
+<summary>Prepare for first boot</summary>
+
+### Exit the chroot, unmount everything
+```bash
+exit
+```
+```bash
+umount -n -R /mnt
+```
+### Export the zpool and reboot
+```bash
+zpool export zroot
+```
+```bash
+reboot
+```
+
 </details>
