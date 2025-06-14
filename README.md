@@ -12,8 +12,8 @@ sudo -i
 ```
 Confirm EFI support:
 ```bash
-# dmesg | grep -i efivars
-[    0.301784] Registered efivars operations
+dmesg | grep -i efivars
+## should return -> [    0.301784] Registered efivars operations
 ```
 ### Source `/etc/os-release`
 The file `/etc/os-release` defines variables that describe the running distribution. In particular, the `$ID` variable defined within can be used as a short name for the filesystem that will hold this installation.
@@ -24,7 +24,7 @@ export ID
 ### Install helpers
 ```bash
 apt update
-apt install debootstrap gdisk zfsutils-linux
+apt install -y debootstrap gdisk zfsutils-linux
 ```
 ### Generate `/etc/hostid`
 ```bash
