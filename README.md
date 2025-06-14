@@ -65,26 +65,37 @@ export POOL_DEVICE2="${POOL_DISK2}-part${POOL_PART}"
 ### Wipe partitions
 ```bash
 zpool labelclear -f "$POOL_DISK1"
+sleep 2
 zpool labelclear -f "$POOL_DISK2"
+sleep 2
 ```
 ```bash
 wipefs -a "$POOL_DISK1"
+sleep 2
 wipefs -a "$POOL_DISK2"
+sleep 2
 wipefs -a "$BOOT_DISK"
+sleep 2
 ```
 ```bash
 sgdisk --zap-all "$POOL_DISK1"
+sleep 2
 sgdisk --zap-all "$POOL_DISK2"
+sleep 2
 sgdisk --zap-all "$BOOT_DISK"
+sleep 2
 ```
 ### Create EFI boot partition
 ```bash
 sgdisk -n "${BOOT_PART}:1m:+512m" -t "${BOOT_PART}:ef00" "$BOOT_DISK"
+sleep 2
 ```
 ### Create zpool partition
 ```bash
 sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" "$POOL_DISK1"
+sleep 2
 sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" "$POOL_DISK2"
+sleep 2
 ```
 
 </details>
@@ -427,6 +438,14 @@ cp -a /etc/skel/. /home/"$USER"
 chown -R "$USER":"$USER" /home/"$USER"
 usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
 printf $PASSWORD"\n"$PASSWORD | passwd $USER
+```
+
+</details>
+<details>
+<summary>set up `openssh-server`</summary>
+
+```
+apt install -y openssh-server
 ```
 
 </details>
