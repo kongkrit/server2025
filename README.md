@@ -230,7 +230,7 @@ echo "$ethernetinterface"
 ```
 ```bash
 ##troubleshoot: sudo netplan --debug generate
-cat > "$mountpoint"/etc/netplan/01-"$ethernetinterface".yaml <<-EOF
+cat > /etc/netplan/01-"$ethernetinterface".yaml <<-EOF
   network:
     version: 2
     ethernets:
