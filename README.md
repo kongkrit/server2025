@@ -178,6 +178,7 @@ should return
 ```bash
 zroot/ROOT/ubuntu on /mnt type zfs (rw,noatime,xattr,posixacl)
 zroot/home on /mnt/home type zfs (rw,noatime,xattr,posixacl)
+zroot/home/root on /mnt/root type zfs (rw,noatime,xattr,posixacl)
 ```
 #### prevent `/root` directory access
 ```bash
