@@ -363,7 +363,7 @@ locale
 ```
 #### check timezone
 ```bash
-timedatectl
+date
 ```
 #### check keyboar layout
 ```bash
