@@ -488,15 +488,10 @@ chown -R "$USER":"$USER" /home/"$USER"
 usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
 printf $PASSWORD"\n"$PASSWORD | passwd $USER
 ```
-
-</details>
-<details>
-<summary>set up `openssh-server`</summary>
-
+double check whether `/home/"$USER"` belongs to `$USER`
+```bash
+ls -al /home
 ```
-apt install -y openssh-server
-```
-
 </details>
 <details>
 <summary>Prepare for first boot</summary>
