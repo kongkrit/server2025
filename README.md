@@ -73,6 +73,7 @@ sleep 2
 zpool labelclear -f "$POOL_DISK2"
 sleep 2
 ```
+`failed to clear label` error is ok if this is a set of new disks
 ```bash
 wipefs -a "$POOL_DISK1"
 sleep 2
