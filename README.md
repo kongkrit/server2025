@@ -230,7 +230,6 @@ echo "$ethernetinterface"
 ```
 generate ethernet interface file
 ```bash
-##troubleshoot: sudo netplan --debug generate
 cat > /etc/netplan/01-"$ethernetinterface".yaml <<-EOF
   network:
     version: 2
@@ -241,13 +240,15 @@ EOF
 # disable read from (g)roup and (o)thers
 chmod go-r /etc/netplan/01-"$ethernetinterface".yaml
 ```
-check and troubleshoot if there's any 
+check and troubleshoot if there's any problem
+```bash
+netplan --debug generate
+```
 ### TODO: Install openssh-server
 ```bash
-			apt install -y openssh-server
-			if [ "$allow_root_ssh_with_password" = "yes" ]; then
-				sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
-			fi
+apt install -y openssh-server
+# -- uncomment to permit root login
+# sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
 ```
 > [!NOTE]
 > The `--no-install-recommends` flag is used here to avoid installing recommended, but not strictly needed, packages (including `grub2`).
