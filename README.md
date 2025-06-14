@@ -309,17 +309,6 @@ dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 <summary>Scripted way</summary>
   
 #### set locale for `en_US.UTF-8`
-<details>
-<summary>this one doesn't seem to work</summary>
-  
-```bash
-echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
-echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
-dpkg-reconfigure -f noninteractive locales
-```
-</details>
-
-let's try this one
 ```bash
 export DEBIAN_FRONTEND=noninteractive
 
@@ -341,24 +330,8 @@ export LC_ALL=en_US.UTF-8
 # 5. (Optional) Confirm with:
 locale
 ```
-```bash
-export DEBIAN_FRONTEND=noninteractive
-echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
-locale-gen && \
-update-locale LANG=en_US.UTF-8
-```
-#### Set Time Zone to `Asia/Bangkok`
-<details>
-<summary>this one doesn't seem to work</summary>
-  
-```bash
-echo "tzdata tzdata/Areas select Asia" | debconf-set-selections
-echo "tzdata tzdata/Zones/Asia select Bangkok" | debconf-set-selections
-dpkg-reconfigure -f noninteractive tzdata
-```
-</details>
 
-let's try this one
+#### Set Time Zone to `Asia/Bangkok`
 ```bash
 ln -sf /usr/share/zoneinfo/Asia/Bangkok /etc/localtime
 dpkg-reconfigure -f noninteractive tzdata
@@ -380,7 +353,6 @@ At 3840x2160 resolution and normal viewing distance (~60 cm), `Terminus` works w
 - 12x24 – slightly smaller, still very sharp
 - 10x20 – medium size, good for more content, still readable
 
-</details>
 <details>
 <summary>Check locale, timezone, and keyboard</summary>
 
@@ -398,7 +370,6 @@ cat /etc/default/keyboard
 ```
 
 </details>
-
 
 > [!NOTE]
 > You should always enable the `en_US.UTF-8` locale because some programs require it.
