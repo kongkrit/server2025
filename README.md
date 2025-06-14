@@ -228,6 +228,7 @@ get ethernet interface
 export ethernetinterface="$(basename "$(find /sys/class/net -maxdepth 1 -mindepth 1 -name "${ethprefix}*")")"
 echo "$ethernetinterface"
 ```
+generate ethernet interface file
 ```bash
 ##troubleshoot: sudo netplan --debug generate
 cat > /etc/netplan/01-"$ethernetinterface".yaml <<-EOF
@@ -237,7 +238,10 @@ cat > /etc/netplan/01-"$ethernetinterface".yaml <<-EOF
       $ethernetinterface:
         dhcp4: yes
 EOF
+# disable read from (g)roup and (o)thers
+chmod go-r /etc/netplan/01-"$ethernetinterface".yaml
 ```
+check and troubleshoot if there's any 
 ### TODO: Install openssh-server
 ```bash
 			apt install -y openssh-server
