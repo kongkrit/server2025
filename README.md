@@ -353,6 +353,7 @@ At 3840x2160 resolution and normal viewing distance (~60 cm), `Terminus` works w
 - 12x24 – slightly smaller, still very sharp
 - 10x20 – medium size, good for more content, still readable
 
+</details>
 <details>
 <summary>Check locale, timezone, and keyboard</summary>
 
