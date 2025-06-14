@@ -262,6 +262,9 @@ apt install --no-install-recommends -y linux-generic locales keyboard-configurat
 ```bash
 apt install --no-install-recommends -y wget nano git make man-db
 ```
+> [!NOTE]
+> The `--no-install-recommends` flag is used here to avoid installing recommended, but not strictly needed, packages (including `grub2`).
+
 ### netplan DHCP setup
 get ethernet interface
 ```bash
@@ -292,8 +295,6 @@ apt install -y openssh-server
 # -- uncomment to permit root login
 # sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
 ```
-> [!NOTE]
-> The `--no-install-recommends` flag is used here to avoid installing recommended, but not strictly needed, packages (including `grub2`).
 
 ### Configure packages to customize local and console properties
 <details>
@@ -308,10 +309,18 @@ dpkg-reconfigure locales tzdata keyboard-configuration console-setup
 <summary>Scripted way</summary>
   
 #### set locale for `en_US.UTF-8`
+this one doesn't seem to work
 ```bash
 echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
 echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
 dpkg-reconfigure -f noninteractive locales
+```
+let's try this one
+```bash
+export DEBIAN_FRONTEND=noninteractive
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+locale-gen && \
+update-locale LANG=en_US.UTF-8
 ```
 #### Set Time Zone to `Asia/Bangkok`
 ```bash
