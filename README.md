@@ -266,6 +266,7 @@ apt install --no-install-recommends -y wget nano git make man-db
 get ethernet interface
 ```bash
 ##get ethernet interface
+export ethprefix="e"
 export ethernetinterface="$(basename "$(find /sys/class/net -maxdepth 1 -mindepth 1 -name "${ethprefix}*")")"
 echo "$ethernetinterface"
 ```
