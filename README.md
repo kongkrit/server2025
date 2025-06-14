@@ -222,19 +222,21 @@ apt install --no-install-recommends linux-generic locales keyboard-configuration
 apt install --no-install-recommends wget nano git make man-db
 ```
 ### TODO: netplan DHCP setup
+get ethernet interface
 ```bash
-	##get ethernet interface
-	ethernetinterface="$(basename "$(find /sys/class/net -maxdepth 1 -mindepth 1 -name "${ethprefix}*")")"
-	echo "$ethernetinterface"
-		
-	##troubleshoot: sudo netplan --debug generate
-	cat > "$mountpoint"/etc/netplan/01-"$ethernetinterface".yaml <<-EOF
-		network:
-		  version: 2
-		  ethernets:
-		    $ethernetinterface:
-		      dhcp4: yes
-        EOF
+##get ethernet interface
+export ethernetinterface="$(basename "$(find /sys/class/net -maxdepth 1 -mindepth 1 -name "${ethprefix}*")")"
+echo "$ethernetinterface"
+```
+```bash
+##troubleshoot: sudo netplan --debug generate
+cat > "$mountpoint"/etc/netplan/01-"$ethernetinterface".yaml <<-EOF
+  network:
+    version: 2
+    ethernets:
+      $ethernetinterface:
+        dhcp4: yes
+EOF
 ```
 ### TODO: Install openssh-server
 ```bash
