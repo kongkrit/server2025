@@ -348,6 +348,16 @@ dpkg-reconfigure -f noninteractive tzdata
 echo "keyboard-configuration keyboard-configuration/layoutcode string us" | debconf-set-selections
 dpkg-reconfigure -f noninteractive keyboard-configuration
 ```
+#### Set font sizes
+```bash
+echo "console-setup console-setup/fontface select Terminus" | debconf-set-selections
+echo "console-setup console-setup/fontsize select 16x32" | debconf-set-selections
+dpkg-reconfigure -f noninteractive console-setup
+```
+At 3840x2160 resolution and normal viewing distance (~60 cm), `Terminus` works well:
+- 16x32 – large and very readable
+- 12x24 – slightly smaller, still very sharp
+- 10x20 – medium size, good for more content, still readable
 
 </details>
 <details>
