@@ -359,7 +359,7 @@ mount /boot/efi
 ### Install ZFSBootMenu
 **Prebuilt**
 ```bash
-apt install curl
+apt install --no-install-recommends -y curl
 ```
 Fetch a prebuilt ZFSBootMenu EFI executable, saving it to the EFI system partition:
 ```bash
@@ -373,14 +373,23 @@ mount -t efivarfs efivarfs /sys/firmware/efi/efivars
 ```
 **Direct**
 ```bash
-apt install efibootmgr
+apt install -y efibootmgr
 ```
+Mount `efivarfs` (If Missing)
+- check
+  ```bash
+  mount | grep efivarfs
+  ```
+- if nothing appears, mount manually
+  ```bash
+  mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+  ```
+then add boot entries
 ```bash
 efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
   -L "ZFSBootMenu (Backup)" \
   -l '\EFI\ZBM\VMLINUZ-BACKUP.EFI'
-```
-```bash
+
 efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
   -L "ZFSBootMenu" \
   -l '\EFI\ZBM\VMLINUZ.EFI'
