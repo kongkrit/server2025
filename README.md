@@ -395,6 +395,7 @@ systemctl enable zfs-import-cache
 systemctl enable zfs-mount
 systemctl enable zfs-import.target
 ```
+You can safely ignore `Running in chroot, ignoring command 'daemon-reload'` when running `systemctl` inside a `chroot` or non-systemd environment (such as minimal install, live environment, or container without full init).
 ### Configure `initramfs-tools`
 Unencrypted pool -> No required steps
 
@@ -420,7 +421,7 @@ mkfs.vfat -F32 "$BOOT_DEVICE"
 ### Create an fstab entry and mount
 ```bash
 cat << EOF >> /etc/fstab
-$( blkid | grep "$BOOT_DEVICE" | cut -d ' ' -f 2 ) /boot/efi vfat defaults 0 0
+$( blkid "$BOOT_DEVICE" | grep "$BOOT_DEVICE" | cut -d ' ' -f 2 ) /boot/efi vfat defaults 0 0
 EOF
 
 mkdir -p /boot/efi
