@@ -323,19 +323,23 @@ let's try this one
 ```bash
 export DEBIAN_FRONTEND=noninteractive
 
-# Ensure 'locales' is installed
+# 1. Ensure locales package is present
 apt-get update && apt-get install -y locales
 
-# Enable en_US.UTF-8 locale
+# 2. Generate the desired locale
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
 
-# Set it system-wide
+# 3. Set system-wide default locale
 update-locale LANG=en_US.UTF-8
 
-# Optional: Immediately apply for current shell
+# 4. Apply locale to current shell
 export LANG=en_US.UTF-8
+export LANGUAGE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+
+# 5. (Optional) Confirm with:
+locale
 ```
 ```bash
 export DEBIAN_FRONTEND=noninteractive
