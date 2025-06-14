@@ -180,9 +180,13 @@ mount | grep mnt
 ```
 should return
 ```bash
-zroot/ROOT/ubuntu on /mnt type zfs (rw,noatime,xattr,posixacl)
+zroot/ROOT/ubuntu on /mnt type zfs (rw,noatime,xattr,posixacl,casesensitive)
 zroot/home on /mnt/home type zfs (rw,noatime,xattr,posixacl)
 zroot/home/root on /mnt/root type zfs (rw,noatime,xattr,posixacl)
+zroot/var on /mnt/var
+zroot/var/lib on /mnt/var/lib
+zroot/var/log on /mnt/var/log
+zroot/var/lib/libvirt on /mnt/var/lib/libvirt
 ```
 #### prevent `/root` directory access
 ```bash
