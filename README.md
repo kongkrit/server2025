@@ -44,7 +44,9 @@ ls -la /dev/disk/by-id
 ```
 First, define variables that refer to the disk and partition number that will hold **boot files**:
 ```bash
-export BOOT_DISK="/dev/sda"
+export BOOT_DISK="/dev/disk/by-id/ata-VMware_Virtual_SATA_Hard_Drive_0000"
+```
+```bash
 export BOOT_PART="1"
 export BOOT_DEVICE="${BOOT_DISK}${BOOT_PART}"
 ```
@@ -53,6 +55,8 @@ Next, define variables that refer to the disks and partition number that will ho
 ```bash
 export POOL_DISK1="/dev/disk/by-id/nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
 export POOL_DISK2="/dev/disk/by-id/nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
+```
+```bash
 export POOL_PART="1"
 export POOL_DEVICE1="${POOL_DISK1}-part${POOL_PART}"
 export POOL_DEVICE2="${POOL_DISK2}-part${POOL_PART}"
