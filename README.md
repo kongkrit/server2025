@@ -146,10 +146,10 @@ zpool create -f \
 zfs create -o mountpoint=none zroot/ROOT
 zfs create -o mountpoint=/ -o canmount=noauto zroot/ROOT/${ID}
 
-zfs create -o canmount=off zroot/var 
-zfs create -o canmount=off zroot/var/lib
-zfs create zroot/var/log
-zfs create zroot/var/lib/libvirt
+zfs create -o mountpoint=/var zroot/var 
+zfs create -o mountpoint=/var/lib zroot/var/lib
+zfs create -o mountpoint=/var/log zroot/var/log
+zfs create -o mountpoint=/var/lib/libvirt zroot/var/lib/libvirt
 
 zfs create -o mountpoint=/home zroot/home
 zfs create -o mountpoint=/root zroot/home/root
@@ -169,6 +169,10 @@ zpool import -N -R /mnt zroot
 zfs mount zroot/ROOT/${ID}
 zfs mount zroot/home
 zfs mount zroot/home/root
+zfs mount zroot/var
+zfs mount zroot/var/lib
+zfs mount zroot/var/log
+zfs mount zroot/var/lib/libvirt
 ```
 #### Verify that everything is mounted correctly
 ```bash
