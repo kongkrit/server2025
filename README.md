@@ -322,6 +322,23 @@ dpkg-reconfigure -f noninteractive locales
 let's try this one
 ```bash
 export DEBIAN_FRONTEND=noninteractive
+
+# Ensure 'locales' is installed
+apt-get update && apt-get install -y locales
+
+# Enable en_US.UTF-8 locale
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+locale-gen
+
+# Set it system-wide
+update-locale LANG=en_US.UTF-8
+
+# Optional: Immediately apply for current shell
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+```
+```bash
+export DEBIAN_FRONTEND=noninteractive
 echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 locale-gen && \
 update-locale LANG=en_US.UTF-8
