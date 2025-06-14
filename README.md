@@ -38,15 +38,15 @@ For many users, it is most convenient to place boot files (i.e., ZFSBootMenu and
 
 Verify your target disk devices with `lsblk`. `/dev/sda`, `/dev/sdb` and `/dev/nvme0n1` used below are examples.
 
+#### Get disk by id first
+```bash
+ls -la /dev/disk/by-id
+```
 First, define variables that refer to the disk and partition number that will hold **boot files**:
 ```bash
 export BOOT_DISK="/dev/sda"
 export BOOT_PART="1"
 export BOOT_DEVICE="${BOOT_DISK}${BOOT_PART}"
-```
-#### Get disk by id first
-```bash
-ls -la /dev/disk/by-id
 ```
 Next, define variables that refer to the disks and partition number that will hold the **ZFS pool**:
 
