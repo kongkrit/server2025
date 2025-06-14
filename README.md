@@ -10,6 +10,10 @@ Open a terminal on the live installer session, then:
 ```bash
 sudo -i
 ```
+optionally see how environment variables expand
+```bash
+set -x
+```
 Confirm EFI support:
 ```bash
 dmesg | grep -i efivars
