@@ -188,7 +188,7 @@ zroot/var/lib on /mnt/var/lib
 zroot/var/log on /mnt/var/log
 zroot/var/lib/libvirt on /mnt/var/lib/libvirt
 ```
-#### prevent `/root` directory access
+#### prevent `/root` directory access by others
 ```bash
 chmod 700 /mnt/root
 ```
