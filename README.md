@@ -48,7 +48,7 @@ export BOOT_DISK="/dev/disk/by-id/ata-VMware_Virtual_SATA_Hard_Drive_0000"
 ```
 ```bash
 export BOOT_PART="1"
-export BOOT_DEVICE="${BOOT_DISK}${BOOT_PART}"
+export BOOT_DEVICE="${BOOT_DISK}-part${BOOT_PART}"
 ```
 Next, define variables that refer to the disks and partition number that will hold the **ZFS pool**:
 
