@@ -256,11 +256,11 @@ apt upgrade -y
 ```
 ### Install additional base packages
 ```bash
-apt install --no-install-recommends linux-generic locales keyboard-configuration console-setup
+apt install --no-install-recommends -y linux-generic locales keyboard-configuration console-setup
 ```
 ### Install additional not-so-base packages
 ```bash
-apt install --no-install-recommends wget nano git make man-db
+apt install --no-install-recommends -y wget nano git make man-db
 ```
 ### netplan DHCP setup
 get ethernet interface
