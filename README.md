@@ -386,7 +386,7 @@ cat /etc/default/keyboard
 
 ### Install required packages
 ```bash
-apt install dosfstools zfs-initramfs zfsutils-linux
+apt install -y dosfstools zfs-initramfs zfsutils-linux
 ```
 ### Enable systemd ZFS services
 ```bash
@@ -411,6 +411,7 @@ update-initramfs -c -k all
 Assign command-line arguments to be used when booting the final kernel. Because ZFS properties are inherited, assign the common properties to the `ROOT` dataset so all children will inherit common arguments by default.
 ```bash
 zfs set org.zfsbootmenu:commandline="quiet" zroot/ROOT
+zfs set org.zfsbootmenu:menu_timeout=2 zroot/ROOT
 ```
 ### Create a `vfat` filesystem
 ```bash
