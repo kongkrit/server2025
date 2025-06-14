@@ -168,6 +168,7 @@ zpool export zroot
 zpool import -N -R /mnt zroot
 zfs mount zroot/ROOT/${ID}
 zfs mount zroot/home
+zfs mount zroot/home/root
 ```
 #### Verify that everything is mounted correctly
 ```bash
