@@ -131,7 +131,7 @@ zpool create -f \
   -O atime=off \
   -O xattr=sa \
   -m none \
-  zroot mirror "$POOL_DEVICE1" "$POOL_DEVICE2"
+  zroot mirror "$POOL_DISK1" "$POOL_DISK2"
 ```
 > [!NOTE]
 > The option `-o compatibility=openzfs-2.1-linux` is a conservative choice. It can be omitted or otherwise adjusted to match your specific system needs.
