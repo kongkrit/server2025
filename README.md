@@ -125,7 +125,14 @@ zpool create -f \
 ```bash
 zfs create -o mountpoint=none zroot/ROOT
 zfs create -o mountpoint=/ -o canmount=noauto zroot/ROOT/${ID}
+
+zfs create -o canmount=off zroot/var 
+zfs create -o canmount=off zroot/var/lib
+zfs create zroot/var/log
+zfs create zroot/var/lib/libvirt
+
 zfs create -o mountpoint=/home zroot/home
+zfs create -o mountpoint=/root zroot/home/root
 
 zpool set bootfs=zroot/ROOT/${ID} zroot
 ```
@@ -150,6 +157,10 @@ should return
 ```bash
 zroot/ROOT/ubuntu on /mnt type zfs (rw,noatime,xattr,posixacl)
 zroot/home on /mnt/home type zfs (rw,noatime,xattr,posixacl)
+```
+#### prevent `/root` directory access
+```bash
+chmod 700 /mnt/root
 ```
 #### Update device symlinks
 ```bash
@@ -183,8 +194,8 @@ chroot /mnt /bin/bash
 
 ### Set a hostname
 ```bash
-echo 'serveru' > /etc/hostname
-echo -e '127.0.1.1\tserveru' >> /etc/hosts
+echo 'server' > /etc/hostname
+echo -e '127.0.1.1\tserver' >> /etc/hosts
 ```
 ### Set a root password
 ```bash
@@ -211,7 +222,7 @@ EOF
 ### Update the repository cache and system
 ```bash
 apt update
-apt upgrade
+apt upgrade -y
 ```
 ### Install additional base packages
 ```bash
@@ -221,7 +232,7 @@ apt install --no-install-recommends linux-generic locales keyboard-configuration
 ```bash
 apt install --no-install-recommends wget nano git make man-db
 ```
-### TODO: netplan DHCP setup
+### netplan DHCP setup
 get ethernet interface
 ```bash
 ##get ethernet interface
@@ -244,7 +255,7 @@ check and troubleshoot if there's any problem
 ```bash
 netplan --debug generate
 ```
-### TODO: Install openssh-server
+### Install openssh-server
 ```bash
 apt install -y openssh-server
 # -- uncomment to permit root login
@@ -403,20 +414,19 @@ efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
 
 </details>
 <details>
-<summary>TODO: set up non-root user</summary>
+<summary>set up non-root user</summary>
 
 ```
-usersetup(){
-	##6.6 create user account and setup groups
-	zfs create -o mountpoint=/home/"$user" "$RPOOL"/home/${user}
-
-	##gecos parameter disabled asking for finger info
-	adduser --disabled-password --gecos "" "$user"
-	cp -a /etc/skel/. /home/"$user"
-	chown -R "$user":"$user" /home/"$user"
-	usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$user"
-	printf $PASSWORD"\n"$PASSWORD | passwd $user
-}
+##6.6 create user account and setup groups
+export USER="kadmin"
+export PASSWORD="h"
+zfs create -o mountpoint=/home/"$USER" zroot/home/${USER}
+##gecos parameter disabled asking for finger info
+adduser --disabled-password --gecos "" "$USER"
+cp -a /etc/skel/. /home/"$USER"
+chown -R "$USER":"$USER" /home/"$USER"
+usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
+printf $PASSWORD"\n"$PASSWORD | passwd $USER
 ```
 
 </details>
