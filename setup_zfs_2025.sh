@@ -15,8 +15,8 @@ ROOT_PASSWORD="r"
 USER="kadmin"
 PASSWORD="h"
 ## set DEBUG to non empty to pauses
-DEBUG=yes
-#DEBUG=""
+DEBUG=""
+#DEBUG=yes
 
 debugm() {
   echo "$1"
