@@ -99,10 +99,10 @@ getDiskIDs(){
 	POOL_DISK2=$(checkDiskById)
 
 	cat <<-EOF
- 	BOOT_DISK=$BOOT_DISK
- 	POOL_DISK1=$POOL_DISK1
- 	POOL_DISK2=$POOL_DISK2
- 	Please confirm with enter or break with ctrl-c
+		BOOT_DISK=$BOOT_DISK
+		POOL_DISK1=$POOL_DISK1
+		POOL_DISK2=$POOL_DISK2
+		Please confirm with enter or break with ctrl-c
 	EOF
 
 	if [ "$BOOT_DISK" = "$POOL_DISK1" ]; then
