@@ -287,9 +287,12 @@ mount -t devpts pts /mnt/dev/pts
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	echo 'server' > /etc/hostname
 	echo -e '127.0.1.1\tserver' >> /etc/hosts
+EOCHROOT
 
-	echo "set root password"
-	passwd
+debugm "--about to set root password--"
+echo "set root password"
+chroot /mnt /bin/bash -x <<-EOCHROOT
+	printf $ROOT_PASSWORD"\n"$ROOT_PASSWORD | passwd
 EOCHROOT
 
 echo "Configure apt. Use other mirrors if you prefer."
@@ -534,13 +537,6 @@ EOCHROOT
 ## > Some systems can have issues with EFI boot entries. If you reboot and do not see the above entries in your EFI selection screen (usually accessible through an F key during POST), you might need to use a well-known EFI file name. See [Portable EFI](https://docs.zfsbootmenu.org/en/v2.3.x/general/portable.html) for help with this. Your existing ESP can be used, in place of an external USB drive.
 ## >
 ## > Refer to [zbm-kcl.8](https://docs.zfsbootmenu.org/en/v2.3.x/man/zbm-kcl.8.html) and [zfsbootmenu.7](https://docs.zfsbootmenu.org/en/v2.3.x/man/zfsbootmenu.7.html) for details on configuring the boot-time behavior of ZFSBootMenu.
-
-debugm "--about to set root password--"
-
-echo "set root password"
-chroot /mnt /bin/bash -x <<-EOCHROOT
-	printf $ROOT_PASSWORD"\n"$ROOT_PASSWORD | passwd
-EOCHROOT
 
 echo "set up non-root user"
 chroot /mnt /bin/bash -x <<-EOCHROOT
