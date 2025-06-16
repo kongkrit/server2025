@@ -132,6 +132,19 @@ POOL_PART="1"
 POOL_DEVICE1="${POOL_DISK1}-part${POOL_PART}"
 POOL_DEVICE2="${POOL_DISK2}-part${POOL_PART}"
 
+cat <<-EOF
+	BOOT_PART=${BOOT_PART}
+	BOOT_DEVICE=${BOOT_DEVICE} 
+	POOL_DISK1=${POOL_DISK1}
+	POOL_DISK2=${POOL_DISK2}
+
+	POOL_PART=${POOL_PART}
+	POOL_DEVICE1=${POOL_DEVICE1}
+	POOL_DEVICE2=${POOL_DEVICE2}
+EOF
+
+debugm "--about to wipe partitions"
+
 echo "Wipe partitions"
 zpool labelclear -f "$POOL_DISK1"
 sleep 2
