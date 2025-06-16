@@ -158,14 +158,14 @@ sgdisk -n "${BOOT_PART}:1M:+512M" -t "${BOOT_PART}:ef00" "$BOOT_DISK"
 sleep 2
 
 ## echo "Create zpool partition"
-## sgdisk -n "${POOL_PART}:0:-10M" -t "${POOL_PART}:bf00" "$POOL_DISK1"
-## sleep 2
-## sgdisk -n "${POOL_PART}:0:-10M" -t "${POOL_PART}:bf00" "$POOL_DISK2"
-## sleep 2
+sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" "$POOL_DISK1"
+sleep 2
+sgdisk -n "${POOL_PART}:0:-10m" -t "${POOL_PART}:bf00" "$POOL_DISK2"
+sleep 2
+
+debugm "--done zapping disks--"
 
 echo "Create the zpool"
-echo "  set pool parameters"
-echo  "create pool"
 
 zpool create -f \
   -o ashift="$ZPOOL_ASHIFT" \
