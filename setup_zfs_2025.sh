@@ -120,7 +120,10 @@ getDiskIDs(){
 }
 
 echo "get all Disk IDs"
-getDiskIDs
+## getDiskIDs
+BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
+POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
+POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
 read -r _
 
 BOOT_PART="1"
@@ -213,8 +216,8 @@ zfs create -o mountpoint=/var/lib zroot/var/lib
 zfs create -o mountpoint=/var/log zroot/var/log
 zfs create -o mountpoint=/var/lib/libvirt zroot/var/lib/libvirt
 
-zfs create -o mountpoint=/var/lib/docker zroot/var/lib/docker
-zfs create -o mountpoint=/var/lib/containers zroot/var/lib/containers
+# zfs create -o mountpoint=/var/lib/docker zroot/var/lib/docker
+# zfs create -o mountpoint=/var/lib/containers zroot/var/lib/containers
 
 zfs create -o mountpoint=/home zroot/home
 zfs create -o mountpoint=/root zroot/home/root
@@ -224,9 +227,9 @@ zpool set bootfs=zroot/ROOT/${ROOTZFS_FULL_NAME} zroot
 echo " exclude /var/cache, /var/tmp, /var/lib/docker, /var/lib/containers from snapshot"
 zfs create -o com.sun:auto-snapshot=false zroot/var/cache
 zfs create -o com.sun:auto-snapshot=false zroot/var/tmp
-zfs set com.sun:auto-snapshot=false zroot/var/lib/docker
-zfs set com.sun:auto-snapshot=false zroot/var/lib/containers
-chmod 1777 /mnt/var/tmp
+zfs create -o com.sun:auto-snapshot=false zroot/var/lib/docker
+zfs create -o com.sun:auto-snapshot=false zroot/var/lib/containers
+chmod 1777 /var/tmp
 
 ## > [!NOTE]
 ## > It is important to set the property canmount=noauto on any file systems with mountpoint=/ (that is, on any additional boot environments you create). Without this property, the OS will attempt to automount all ZFS file systems and fail when multiple file systems attempt to mount at /; this will prevent your system from booting. Automatic mounting of / is not required because the root file system is explicitly mounted in the boot process.
