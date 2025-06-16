@@ -224,8 +224,8 @@ zpool set bootfs=zroot/ROOT/${ROOTZFS_FULL_NAME} zroot
 echo " exclude /var/cache, /var/tmp, /var/lib/docker, /var/lib/containers from snapshot"
 zfs create -o com.sun:auto-snapshot=false zroot/var/cache
 zfs create -o com.sun:auto-snapshot=false zroot/var/tmp
-zfs create -o com.sun:auto-snapshot=false zroot/var/lib/docker
-zfs create -o com.sun:auto-snapshot=false zroot/var/lib/containers
+zfs set com.sun:auto-snapshot=false zroot/var/lib/docker
+zfs set com.sun:auto-snapshot=false zroot/var/lib/containers
 chmod 1777 /mnt/var/tmp
 
 ## > [!NOTE]
