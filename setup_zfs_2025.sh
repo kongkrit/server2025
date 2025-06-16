@@ -246,17 +246,17 @@ zfs mount zroot/var/lib/containers
 
 echo "Verify that everything is mounted correctly"
 mount | grep mnt
-cat <<EOF
- the above should return
-zroot/ROOT/ubuntu on /mnt type zfs (rw,noatime,xattr,posixacl,casesensitive)
-zroot/home on /mnt/home type zfs (rw,noatime,xattr,posixacl)
-zroot/home/root on /mnt/root type zfs (rw,noatime,xattr,posixacl)
-zroot/var on /mnt/var
-zroot/var/lib on /mnt/var/lib
-zroot/var/log on /mnt/var/log
-zroot/var/lib/libvirt on /mnt/var/lib/libvirt
-zroot/var/lib/docker on /mnt/var/lib/docker
-zroot/var/lib/containers on /mnt/var/lib/containers
+cat <<-EOF
+	the above should return
+	zroot/ROOT/ubuntu on /mnt type zfs (rw,noatime,xattr,posixacl,casesensitive)
+	zroot/home on /mnt/home type zfs (rw,noatime,xattr,posixacl)
+	zroot/home/root on /mnt/root type zfs (rw,noatime,xattr,posixacl)
+	zroot/var on /mnt/var
+	zroot/var/lib on /mnt/var/lib
+	zroot/var/log on /mnt/var/log
+	zroot/var/lib/libvirt on /mnt/var/lib/libvirt
+	zroot/var/lib/docker on /mnt/var/lib/docker
+	zroot/var/lib/containers on /mnt/var/lib/containers
 EOF
 
 echo "prevent /root directory access by others"
@@ -325,7 +325,9 @@ EOCHROOT
 
 echo "netplan DHCP setup"
 echo "  get ethernet interface"
-chroot /mnt /bin/bash -x <<-EOCHROOT
+
+## need heredoc in chroot below
+chroot /mnt /bin/bash -x <<-'EOCHROOT'
 	export ethprefix="e"
 	export ethernetinterface="$(basename "$(find /sys/class/net -maxdepth 1 -mindepth 1 -name "${ethprefix}*")")"
 	echo "$ethernetinterface"
@@ -498,7 +500,8 @@ EOCHROOT
 echo "  Mount efivarfs (If Missing)"
 echo "  check mount for efivars results between dashed lines"
 
-chroot /mnt /bin/bash -x <<-EOCHROOT
+## need heredoc in chroot below
+chroot /mnt /bin/bash -x <<-'EOCHROOT'
 	EMPTYEFIVARFS=$(mount | grep efivarfs)
 	if [[ -z "$EMPTYEFIVARFS" ]]; then
 	  echo "  empty result, mount"
@@ -544,6 +547,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
 	printf $PASSWORD"\n"$PASSWORD | passwd $USER
 EOCHROOT
+
 echo "  double check whether /home/"$USER" belongs to $USER"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	ls -al /home
