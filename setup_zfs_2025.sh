@@ -16,6 +16,7 @@ USER="kadmin"
 PASSWORD="h"
 ## set DEBUG to non empty to pauses
 DEBUG=yes
+#DEBUG=""
 
 debugm() {
   echo "$1"
@@ -124,7 +125,8 @@ echo "get all Disk IDs"
 BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
 POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
 POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
-read -r _
+
+debugm "--ok with the above?"
 
 BOOT_PART="1"
 BOOT_DISK="/dev/disk/by-id/${BOOT_DISK}"
