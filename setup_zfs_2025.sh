@@ -281,10 +281,14 @@ cp /etc/hostid /mnt/etc
 cp /etc/resolv.conf /mnt/etc
 
 echo "Chroot into the new OS"
-mount -t proc proc /mnt/proc
-mount -t sysfs sys /mnt/sys
-mount -B /dev /mnt/dev
-mount -t devpts pts /mnt/dev/pts
+# mount -t proc proc /mnt/proc
+# mount -t sysfs sys /mnt/sys
+# mount -B /dev /mnt/dev
+# mount -t devpts pts /mnt/dev/pts
+mount --bind /dev /mnt/chroot/dev
+mount --bind /dev/pts /mnt/chroot/dev/pts
+mount --bind /proc /mnt/chroot/proc
+mount --bind /sys /mnt/chroot/sys
 
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	echo 'server' > /etc/hostname
