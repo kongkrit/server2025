@@ -1,7 +1,8 @@
 #!/bin/bash
 
 ## server2025
-set -x
+set -euo pipefail
+# set -x
 
 ## parameters
 ZPOOL_ASHIFT="13"
