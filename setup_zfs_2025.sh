@@ -45,7 +45,7 @@ echo "Install helpers"
 apt update
 apt install -y debootstrap gdisk zfsutils-linux
 
-echo "Generate `/etc/hostid`"
+echo "Generate /etc/hostid"
 zgenhostid -f 0x00bab10c
 
 ### Define disk variables
@@ -54,7 +54,7 @@ zgenhostid -f 0x00bab10c
 
 ## For many users, it is most convenient to place boot files (i.e., ZFSBootMenu and any loader responsible for launching it) on the the same disk that will hold the ZFS pool. However, some users may wish to dedicate an entire disk to the ZFS pool or create a multi-disk pool. A USB flash drive provides a convenient location for the boot partition. Fortunately, this alternative configuration is easily realized by simply defining a few environment variables differently.
 
-## Verify your target disk devices with `lsblk`. `/dev/sda`, `/dev/sdb` and `/dev/nvme0n1` used below are examples.
+## Verify your target disk devices with lsblk. /dev/sda, /dev/sdb and /dev/nvme0n1 used below are examples.
 
 #### Get disk by id first
 
@@ -150,7 +150,7 @@ zpool labelclear -f "$POOL_DISK1"
 sleep 2
 zpool labelclear -f "$POOL_DISK2"
 sleep 2
-echo "  `failed to clear label` error is ok"
+echo "  failed to clear label error is ok"
 
 wipefs -a "$POOL_DISK1"
 sleep 2
@@ -195,9 +195,9 @@ zpool create -f \
   zroot mirror "$POOL_DISK1" "$POOL_DISK2"
 
 ## > [!NOTE]
-## > The option `-o compatibility=openzfs-2.1-linux` is a conservative choice. It can be omitted or otherwise adjusted to match your specific system needs.
+## > The option -o compatibility=openzfs-2.1-linux is a conservative choice. It can be omitted or otherwise adjusted to match your specific system needs.
 ## >
-## > Binary releases of ZFSBootMenu are generally built with the latest stable release of ZFS. Future releases of ZFSBootMenu may therefore support newer feature sets. Check project release notes prior to updating or removing `compatibility` options and upgrading your system pool.
+## > Binary releases of ZFSBootMenu are generally built with the latest stable release of ZFS. Future releases of ZFSBootMenu may therefore support newer feature sets. Check project release notes prior to updating or removing compatibility options and upgrading your system pool.
 
 echo "Create initial file systems"
 echo "  ROOTZFS_FULL_NAME is ${ROOTZFS_FULL_NAME}"
@@ -227,9 +227,9 @@ zfs create -o com.sun:auto-snapshot=false zroot/var/lib/containers
 chmod 1777 /mnt/var/tmp
 
 ## > [!NOTE]
-## > It is important to set the property `canmount=noauto` on any file systems with `mountpoint=/` (that is, on any additional boot environments you create). Without this property, the OS will attempt to automount all ZFS file systems and fail when multiple file systems attempt to mount at `/`; this will prevent your system from booting. Automatic mounting of `/` is not required because the root file system is explicitly mounted in the boot process.
+## > It is important to set the property canmount=noauto on any file systems with mountpoint=/ (that is, on any additional boot environments you create). Without this property, the OS will attempt to automount all ZFS file systems and fail when multiple file systems attempt to mount at /; this will prevent your system from booting. Automatic mounting of / is not required because the root file system is explicitly mounted in the boot process.
 ## >
-## > Also note that, unlike many ZFS properties, `canmount` is not inheritable. Therefore, setting `canmount=noauto` on `zroot/ROOT` is not sufficient, as any subsequent boot environments you create will default to `canmount=on`. It is necessary to explicitly set the `canmount=noauto` on every boot environment you create.
+## > Also note that, unlike many ZFS properties, canmount is not inheritable. Therefore, setting canmount=noauto on zroot/ROOT is not sufficient, as any subsequent boot environments you create will default to canmount=on. It is necessary to explicitly set the canmount=noauto on every boot environment you create.
 
 echo "Export, then re-import with a temporary mountpoint of /mnt"
 zpool export zroot
@@ -287,7 +287,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	passwd
 EOCHROOT
 
-echo "Configure `apt`. Use other mirrors if you prefer."
+echo "Configure apt. Use other mirrors if you prefer."
 cat <<-EOF > /mnt/etc/apt/sources.list
 	# Uncomment the deb-src entries if you need source packages
 
@@ -321,7 +321,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 EOCHROOT
 
 ## > [!NOTE]
-## > The `--no-install-recommends` flag is used here to avoid installing recommended, but not ## strictly needed, packages (including `grub2`).
+## > The --no-install-recommends flag is used here to avoid installing recommended, but not ## strictly needed, packages (including grub2).
 
 echo "netplan DHCP setup"
 echo "  get ethernet interface"
@@ -400,7 +400,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	echo "console-setup console-setup/fontsize select 16x32" | debconf-set-selections
 	dpkg-reconfigure -f noninteractive console-setup
 EOCHROOT
-## At 3840x2160 resolution and normal viewing distance (~60 cm), `Terminus` works well:
+## At 3840x2160 resolution and normal viewing distance (~60 cm), Terminus works well:
 ## - 16x32 – large and very readable
 ## - 12x24 – slightly smaller, still very sharp
 ## - 10x20 – medium size, good for more content, still readable
@@ -416,7 +416,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	cat /etc/default/keyboard
 EOCHROOT
 ## > [!NOTE]
-## > You should always enable the `en_US.UTF-8` locale because some programs require it.
+## > You should always enable the en_US.UTF-8 locale because some programs require it.
 ## 
 ## > [!NOTE]
 ## > See also
@@ -438,7 +438,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	systemctl enable zfs-import.target
 EOCHROOT
 cat <<EOF
-You can safely ignore -Running in chroot, ignoring command -daemon-reload- when running `systemctl` inside a `chroot` or non-systemd environment (such as minimal install, live environment, or container without full init).
+You can safely ignore -Running in chroot, ignoring command -daemon-reload- when running systemctl inside a chroot or non-systemd environment (such as minimal install, live environment, or container without full init).
 EOF
 
 echo "Configure initramfs-tools"
@@ -454,7 +454,7 @@ debugm "--about to install ZFSBootMenu--"
 echo "Install and configure ZFSBootMenu"
 
 ### Set ZFSBootMenu properties on datasets
-## Assign command-line arguments to be used when booting the final kernel. Because ZFS properties are inherited, assign the common properties to the `ROOT` dataset so all children will inherit common arguments by default.
+## Assign command-line arguments to be used when booting the final kernel. Because ZFS properties are inherited, assign the common properties to the ROOT dataset so all children will inherit common arguments by default.
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	## quiet version -- zfs set org.zfsbootmenu:commandline="quiet" zroot/ROOT
 	zfs set org.zfsbootmenu:commandline="" zroot/ROOT
@@ -495,7 +495,7 @@ echo "  **Direct**"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	apt install -y efibootmgr
 EOCHROOT
-echo "  Mount `efivarfs` (If Missing)"
+echo "  Mount efivarfs (If Missing)"
 echo "  check mount for efivars results between dashed lines"
 
 chroot /mnt /bin/bash -x <<-EOCHROOT
@@ -544,7 +544,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
 	printf $PASSWORD"\n"$PASSWORD | passwd $USER
 EOCHROOT
-echo "  double check whether `/home/"$USER"` belongs to `$USER`"
+echo "  double check whether /home/"$USER" belongs to $USER"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	ls -al /home
 EOCHROOT
@@ -561,5 +561,5 @@ echo "Export the zpool"
 zpool export zroot
 
 echo ""
-echo "You may reboot with `reboot` command"
+echo "You may reboot with reboot command"
 ## reboot
