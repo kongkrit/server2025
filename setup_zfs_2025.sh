@@ -148,11 +148,11 @@ EOF
 debugm "--about to wipe partitions"
 
 echo "Wipe partitions"
-zpool labelclear -f "$POOL_DISK1"
-sleep 2
-zpool labelclear -f "$POOL_DISK2"
-sleep 2
-echo "  failed to clear label error is ok"
+# zpool labelclear -f "$POOL_DISK1"
+# sleep 2
+# zpool labelclear -f "$POOL_DISK2"
+# sleep 2
+# echo "  failed to clear label error is ok"
 
 wipefs -a "$POOL_DISK1"
 sleep 2
