@@ -16,7 +16,7 @@ PASSWORD="h"
 ## set DEBUG to non empty to pauses
 DEBUG=yes
 
-debugmsg() {
+debugm() {
   echo "$1"
   if [[ -n "$DEBUG" ]]; then
     read -r _
