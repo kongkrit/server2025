@@ -347,8 +347,8 @@ chroot /mnt /bin/bash -x <<-'EOCHROOT'
 		network:
 		  version: 2
 		  ethernets:
-		  $ethernetinterface:
-		    dhcp4: yes
+		    $ethernetinterface:
+		      dhcp4: yes
 	EOF
 	echo "  disable read from (g)roup and (o)thers"
 	chmod go-r /etc/netplan/01-"$ethernetinterface".yaml
