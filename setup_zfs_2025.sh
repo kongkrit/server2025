@@ -396,7 +396,7 @@ echo "  Install openssh-server"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	apt install -y openssh-server
 	# -- uncomment to permit root login
-	# sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
+	sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
 EOCHROOT
 
 debugm "--about to do locale timezone console fonts--"
