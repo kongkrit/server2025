@@ -10,7 +10,7 @@ DEBUG=""
 
 ## use additional local apt repo
 LOCAL_APT_MIRROR="NO"
-LOCAL_APT_MIRROR="YES" ## must be exactly YES to work, everything else fails 
+# LOCAL_APT_MIRROR="YES" ## must be exactly YES to work, everything else fails 
 LOCAL_APT_MIRROR_IP="192.168.0.61"
 
 ## server parameters
