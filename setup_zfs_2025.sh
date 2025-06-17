@@ -2,7 +2,7 @@
 
 ## server2025
 set -euo pipefail
-# set -x
+set -x
 
 ## set DEBUG to non empty to pauses
 DEBUG=""
@@ -45,6 +45,18 @@ if test -d /sys/firmware/efi; then
 else
    echo "booted up in bios, not efi. script requires EFI booting."
    exit 1
+fi
+
+if [ "$LOCAL_APT_MIRROR" = "YES" ]; then
+  echo "configure local apt mirror"
+  cat <<-EOF > /tmp/local_sources.list
+	# Local mirror (trusted)
+	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble main restricted
+	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-updates main restricted
+	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-security main restricted
+  EOF
+  cat /etc/apt/sources.list >> /tmp/local_sources.list
+  mv /tmp/local_sources.list /etc/apt/sources.list
 fi
 
 echo "source etc/os-release to get ID"
@@ -309,18 +321,8 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	printf $ROOT_PASSWORD"\n"$ROOT_PASSWORD | passwd
 EOCHROOT
 
-if [ "$LOCAL_APT_MIRROR" = "YES" ]; then
-  echo "configure local apt mirror"
-  cat <<-EOF > /mnt/etc/apt/sources.list
-	# Local mirror (trusted)
-	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble main restricted
-	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-updates main restricted
-	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-security main restricted
-  EOF
-fi
-
 echo "Configure apt. Use other mirrors if you prefer."
-cat <<-EOF >> /mnt/etc/apt/sources.list
+cat <<-EOF > /mnt/etc/apt/sources.list
 	# Uncomment the deb-src entries if you need source packages
 
 	deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse
