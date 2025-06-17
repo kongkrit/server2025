@@ -315,8 +315,8 @@ mount -t devpts pts /mnt/dev/pts
 # mount --bind /sys /mnt/sys
 
 chroot /mnt /bin/bash -x <<-EOCHROOT
-	echo 'server' > /etc/hostname
-	echo -e '127.0.1.1\tserver' >> /etc/hosts
+	echo '${HOSTNAME}' > /etc/hostname
+	echo -e '127.0.1.1\t${HOSTNAME}' >> /etc/hosts
 EOCHROOT
 
 debugm "--about to set root password--"
