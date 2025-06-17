@@ -17,7 +17,7 @@ xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/inactivity-on-batter
 xfconf-query -c xfce4-power-manager -p /xfce4-power-manager/critical-power-action -n -t int -s 0
 
 # Optionally stop xfce4-power-manager (if you don't want it running at all)
-pkill xfce4-power-manager
+pkill -f xfce4-power-manager
 
 # Confirm settings
 echo "Current xset settings:"
