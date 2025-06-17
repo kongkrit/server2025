@@ -56,9 +56,6 @@ cat <<-EOF > /tmp/local.sources
 	Components: main restricted
 	Trusted: yes
 EOF
-
-exit 1
-
 if [ "$LOCAL_APT_MIRROR" = "YES" ]; then
   echo "configure local apt mirror"
   cat /etc/apt/sources.list.d/ubuntu.sources >> /tmp/local.sources
