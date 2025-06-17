@@ -314,6 +314,11 @@ mount -t devpts pts /mnt/dev/pts
 # mount --bind /proc /mnt/proc
 # mount --bind /sys /mnt/sys
 
+# silence errors from writing to nonexistent /dev/log
+chroot /mnt /bin/bash -x <<-EOCHROOT
+	ln -sf /dev/null /dev/log
+EOCHROOT
+
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	echo '${HOSTNAME}' > /etc/hostname
 	echo -e '127.0.1.1\t${HOSTNAME}' >> /etc/hosts
@@ -571,12 +576,13 @@ EOCHROOT
 echo "set up non-root user"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	zfs create -o mountpoint=/home/"$USER" zroot/home/${USER}
+ 	zfs mount zroot/home/${USER}
 	## gecos parameter disabled asking for finger info
- 	## adduser --disabled-password --gecos "" "$USER"
 	if [ -d "/home/$USER" ]; then
  	  echo "/home/$USER already exists. Skipping home creation."
 	  adduser --disabled-password --gecos "" --no-create-home "$USER"
 	else
+ 	  echo "/home/$USER doesn't exist. create."
           adduser --disabled-password --gecos "" "$USER"
 	fi
 	cp -a /etc/skel/. /home/"$USER"
