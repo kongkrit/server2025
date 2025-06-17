@@ -47,14 +47,15 @@ else
    exit 1
 fi
 
-if [ "$LOCAL_APT_MIRROR" = "YES" ]; then
-  echo "configure local apt mirror"
-  cat <<-EOF > /tmp/local_sources.list
+# create local mirror if needed
+cat <<-EOF > /tmp/local_sources.list
 	# Local mirror (trusted)
 	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble main restricted
 	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-updates main restricted
 	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-security main restricted
-  EOF
+EOF
+if [ "$LOCAL_APT_MIRROR" = "YES" ]; then
+  echo "configure local apt mirror"
   cat /etc/apt/sources.list >> /tmp/local_sources.list
   mv /tmp/local_sources.list /etc/apt/sources.list
 fi
