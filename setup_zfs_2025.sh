@@ -575,12 +575,9 @@ EOCHROOT
 ## > Refer to [zbm-kcl.8](https://docs.zfsbootmenu.org/en/v2.3.x/man/zbm-kcl.8.html) and [zfsbootmenu.7](https://docs.zfsbootmenu.org/en/v2.3.x/man/zfsbootmenu.7.html) for details on configuring the boot-time behavior of ZFSBootMenu.
 
 echo "set up non-root user"
-# need UID and GID before chroot
-UID=1000
-GID=1000
 chroot /mnt /bin/bash -x <<-EOCHROOT
-	UID=${UID}
- 	GID=${GID}
+	UID=1000
+ 	GID=1000
 	addgroup --gid "$GID" "$USER"
 	## gecos parameter disabled asking for finger info
 	if [ -d "/home/$USER" ]; then
