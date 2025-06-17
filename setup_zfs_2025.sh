@@ -576,8 +576,10 @@ EOCHROOT
 
 echo "set up non-root user"
 chroot /mnt /bin/bash -x <<-EOCHROOT
-	UID=1000
-	GID=1000
+	# UID=1000
+	# GID=1000
+	UID="${UID:-1000}"
+	GID="${GID:-1000}"
 	addgroup --gid "$GID" "$USER"
 	## gecos parameter disabled asking for finger info
 	if [ -d "/home/$USER" ]; then
