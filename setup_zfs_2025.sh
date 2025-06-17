@@ -309,10 +309,10 @@ echo "Chroot into the new OS"
 # mount -t sysfs sys /mnt/sys
 # mount -B /dev /mnt/dev
 # mount -t devpts pts /mnt/dev/pts
-mount --bind /dev /mnt/chroot/dev
-mount --bind /dev/pts /mnt/chroot/dev/pts
-mount --bind /proc /mnt/chroot/proc
-mount --bind /sys /mnt/chroot/sys
+mount --bind /dev /mnt/dev
+mount --bind /dev/pts /mnt/dev/pts
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
 
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	echo 'server' > /etc/hostname
