@@ -247,7 +247,7 @@ zfs create -o mountpoint=/var/lib/libvirt zroot/var/lib/libvirt
 
 zfs create -o mountpoint=/home zroot/home
 zfs create -o mountpoint=/root zroot/home/root
-zfs create -o mountpoint=/home/${USER} zroot/home/${USER}
+# zfs create -o mountpoint=/home/${USER} zroot/home/${USER}
 
 zpool set bootfs=zroot/ROOT/${ROOTZFS_FULL_NAME} zroot
 
@@ -576,9 +576,9 @@ EOCHROOT
 
 echo "set up non-root user"
 chroot /mnt /bin/bash -x <<-EOCHROOT
-	UID=1000
- 	GID=1000
-	addgroup --gid "\$GID" "$USER"
+	## UID=1000
+ 	## GID=1000
+	## addgroup --gid "\$GID" "$USER"
 	## gecos parameter disabled asking for finger info
 	if [ -d "/home/$USER" ]; then
  	  echo "/home/$USER already exists. Skipping home creation."
@@ -588,8 +588,8 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
           adduser --disabled-password --gecos "" "$USER"
 	fi
 	cp -a /etc/skel/. /home/"$USER"
-	# chown -R "$USER":"$USER" /home/"$USER"
- 	chown -R "\$UID:\$GID /home/$USER
+	chown -R "$USER":"$USER" /home/"$USER"
+ 	# chown -R "\$UID:\$GID /home/$USER
 	# usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
  	apt install -y sudo
  	usermod -a -G adm,cdrom,dip,plugdev,sudo "$USER"
