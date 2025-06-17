@@ -49,7 +49,8 @@ fi
 
 # create local mirror if needed
 cat <<-EOF > /tmp/local.sources
- 	Types: deb
+	# Local Trused mirror
+	Types: deb
 	URIs: http://${LOCAL_APT_MIRROR_IP}/ubuntu
 	Suites: noble noble-updates noble-security
 	Components: main restricted
