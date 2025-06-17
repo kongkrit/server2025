@@ -48,16 +48,18 @@ else
 fi
 
 # create local mirror if needed
-cat <<-EOF > /tmp/local_sources.list
+cat <<-EOF > /tmp/local.sources
 	# Local mirror (trusted)
-	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble main restricted
-	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-updates main restricted
-	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-security main restricted
+ 	Types: deb
+	URIs: http://${LOCAL_APT_MIRROR_IP}/ubuntu
+	Suites: noble noble-updates noble-security
+	Components: main restricted
+	Trusted: yes
 EOF
 if [ "$LOCAL_APT_MIRROR" = "YES" ]; then
   echo "configure local apt mirror"
-  cat /etc/apt/sources.list >> /tmp/local_sources.list
-  mv /tmp/local_sources.list /etc/apt/sources.list
+  cat /etc/apt/sources.list.d/ubuntu.sources >> /tmp/local.sources
+  mv /tmp/local.sources /etc/apt/sources.list.d/ubuntu.sources
 fi
 
 echo "source etc/os-release to get ID"
