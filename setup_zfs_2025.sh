@@ -4,19 +4,27 @@
 set -euo pipefail
 # set -x
 
-## parameters
+## set DEBUG to non empty to pauses
+DEBUG=""
+#DEBUG=yes
+
+## use additional local apt repo
+LOCAL_APT_MIRROR="NO"
+LOCAL_APT_MIRROR="YES" ## must be exactly YES to work, everything else fails 
+LOCAL_APT_MIRROR_IP="192.168.0.61"
+
+## server parameters
 ZPOOL_ASHIFT="13"
 ZFS_COMPRESSION="lz4"
 ROOTZFS_FULL_NAME="ubuntu-$(date +%Y-%m-%d)"
 HOSTNAME="server"
+
 ## root password
 ROOT_PASSWORD="r"
+
 ## admin account
 USER="kadmin"
 PASSWORD="h"
-## set DEBUG to non empty to pauses
-DEBUG=""
-#DEBUG=yes
 
 debugm() {
   echo "$1"
@@ -301,8 +309,18 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	printf $ROOT_PASSWORD"\n"$ROOT_PASSWORD | passwd
 EOCHROOT
 
+if [ "$LOCAL_APT_MIRROR" = "YES" ]; then
+  echo "configure local apt mirror"
+  cat <<-EOF > /mnt/etc/apt/sources.list
+	# Local mirror (trusted)
+	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble main restricted
+	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-updates main restricted
+	deb [trusted=yes] http://${LOCAL_APT_MIRROR_IP}/ubuntu noble-security main restricted
+  EOF
+fi
+
 echo "Configure apt. Use other mirrors if you prefer."
-cat <<-EOF > /mnt/etc/apt/sources.list
+cat <<-EOF >> /mnt/etc/apt/sources.list
 	# Uncomment the deb-src entries if you need source packages
 
 	deb http://archive.ubuntu.com/ubuntu/ noble main restricted universe multiverse
@@ -548,7 +566,13 @@ echo "set up non-root user"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	zfs create -o mountpoint=/home/"$USER" zroot/home/${USER}
 	## gecos parameter disabled asking for finger info
-	adduser --disabled-password --gecos "" "$USER"
+ 	## adduser --disabled-password --gecos "" "$USER"
+	if [ -d "/home/$USER" ]; then
+ 	  echo "/home/$USER already exists. Skipping home creation."
+	  adduser --disabled-password --gecos "" --no-create-home "$USER"
+	else
+          adduser --disabled-password --gecos "" "$USER"
+	fi
 	cp -a /etc/skel/. /home/"$USER"
 	chown -R "$USER":"$USER" /home/"$USER"
 	usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
