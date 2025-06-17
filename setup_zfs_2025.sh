@@ -578,7 +578,7 @@ echo "set up non-root user"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	UID=1000
  	GID=1000
-	addgroup --gid "$GID" "$USER"
+	addgroup --gid "\$GID" "$USER"
 	## gecos parameter disabled asking for finger info
 	if [ -d "/home/$USER" ]; then
  	  echo "/home/$USER already exists. Skipping home creation."
@@ -589,7 +589,7 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	fi
 	cp -a /etc/skel/. /home/"$USER"
 	# chown -R "$USER":"$USER" /home/"$USER"
- 	chown -R "$UID:$GID" /home/$USER
+ 	chown -R "\$UID:\$GID /home/$USER
 	# usermod -a -G adm,cdrom,dip,lpadmin,lxd,plugdev,sambashare,sudo "$USER"
  	apt install -y sudo
  	usermod -a -G adm,cdrom,dip,plugdev,sudo "$USER"
