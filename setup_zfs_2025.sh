@@ -247,6 +247,7 @@ zfs create -o mountpoint=/var/lib/libvirt zroot/var/lib/libvirt
 
 zfs create -o mountpoint=/home zroot/home
 zfs create -o mountpoint=/root zroot/home/root
+zfs create -o mountpoint=/home/${USER} zroot/home/${USER}
 
 zpool set bootfs=zroot/ROOT/${ROOTZFS_FULL_NAME} zroot
 
@@ -575,8 +576,8 @@ EOCHROOT
 
 echo "set up non-root user"
 chroot /mnt /bin/bash -x <<-EOCHROOT
-	zfs create -o mountpoint=/home/"$USER" zroot/home/${USER}
- 	zfs mount zroot/home/${USER}
+	## zfs create -o mountpoint=/home/"$USER" zroot/home/${USER}
+ 	## zfs mount zroot/home/${USER}
 	## gecos parameter disabled asking for finger info
 	if [ -d "/home/$USER" ]; then
  	  echo "/home/$USER already exists. Skipping home creation."
