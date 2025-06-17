@@ -560,12 +560,12 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
 	  -L "ZFSBootMenu (Backup)" \
 	  -l '\EFI\ZBM\VMLINUZ-BACKUP.EFI' \
-	  -u "timeout=3"
+	  -u "timeout=3 loglevel=4"
 
 	efibootmgr -c -d "$BOOT_DISK" -p "$BOOT_PART" \
 	  -L "ZFSBootMenu" \
 	  -l '\EFI\ZBM\VMLINUZ.EFI' \
-	  -u "timeout=3"
+	  -u "timeout=3 loglevel=4"
 EOCHROOT
 ## > [!NOTE}
 ## > See also
