@@ -585,12 +585,14 @@ EOCHROOT
 echo "add pretty prompts to .bashrc"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	for f in /etc/skel/.bashrc /root/.bashrc; do
-		cat >> "$f" <<-EOF
+		cat >> "$f" <<-'EOF'
   			# my pretty prompt
-			if [[ \$USER != "root" ]]; then
-			  PS1="\[\e[0m\][\[\e[01;32m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\\\\$ "
+			if [[ $USER != "root" ]]; then
+			  # PS1="\[\e[0m\][\[\e[01;32m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\\\\$ "
+     			  PS1="\[\e[0m\][\[\e[01;32m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\$ "
 			else
-			  PS1="\[\e[0m\][\[\e[01;31m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\\\\$ "
+			  # PS1="\[\e[0m\][\[\e[01;31m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\\\\$ "
+     			  PS1="\[\e[0m\][\[\e[01;31m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]# "
 			fi
 		EOF
 	done
