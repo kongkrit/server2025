@@ -264,6 +264,7 @@ chmod 1777 /var/tmp
 ## > Also note that, unlike many ZFS properties, canmount is not inheritable. Therefore, setting canmount=noauto on zroot/ROOT is not sufficient, as any subsequent boot environments you create will default to canmount=on. It is necessary to explicitly set the canmount=noauto on every boot environment you create.
 
 echo "Export, then re-import with a temporary mountpoint of /mnt"
+zfs unmount -a
 zpool export zroot
 zpool import -N -R /mnt zroot
 zfs mount zroot/ROOT/${ROOTZFS_FULL_NAME}
