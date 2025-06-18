@@ -145,10 +145,10 @@ getDiskIDs(){
 }
 
 echo "get all Disk IDs"
-## getDiskIDs
-BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
-POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
-POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
+getDiskIDs
+## BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
+## POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
+## POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
 
 debugm "--ok with the above?"
 
