@@ -145,10 +145,10 @@ getDiskIDs(){
 }
 
 echo "get all Disk IDs"
-getDiskIDs
-## BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
-## POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
-## POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
+## getDiskIDs
+BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
+POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
+POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
 
 debugm "--ok with the above?"
 
@@ -264,7 +264,7 @@ chmod 1777 /var/tmp
 ## > Also note that, unlike many ZFS properties, canmount is not inheritable. Therefore, setting canmount=noauto on zroot/ROOT is not sufficient, as any subsequent boot environments you create will default to canmount=on. It is necessary to explicitly set the canmount=noauto on every boot environment you create.
 
 echo "Export, then re-import with a temporary mountpoint of /mnt"
-zfs unmount -a
+zfs unmount -r zroot/var
 zpool export zroot
 zpool import -N -R /mnt zroot
 zfs mount zroot/ROOT/${ROOTZFS_FULL_NAME}
