@@ -583,16 +583,14 @@ EOCHROOT
 ## > Refer to [zbm-kcl.8](https://docs.zfsbootmenu.org/en/v2.3.x/man/zbm-kcl.8.html) and [zfsbootmenu.7](https://docs.zfsbootmenu.org/en/v2.3.x/man/zfsbootmenu.7.html) for details on configuring the boot-time behavior of ZFSBootMenu.
 
 echo "add pretty prompts to .bashrc"
-chroot /mnt /bin/bash -x <<-EOCHROOT
+chroot /mnt /bin/bash -x <<-'EOCHROOT'
 	for f in /etc/skel/.bashrc /root/.bashrc; do
 		cat >> "$f" <<-'EOF'
-  			# my pretty prompt
+			# my pretty prompt
 			if [[ $USER != "root" ]]; then
-			  # PS1="\[\e[0m\][\[\e[01;32m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\\\\$ "
-     			  PS1="\[\e[0m\][\[\e[01;32m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\$ "
+			  PS1="\[\e[0m\][\[\e[01;32m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\$ "
 			else
-			  # PS1="\[\e[0m\][\[\e[01;31m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]\\\\$ "
-     			  PS1="\[\e[0m\][\[\e[01;31m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]# "
+			  PS1="\[\e[0m\][\[\e[01;31m\]\u@\h\[\e[01;34m\] \w \[\e[0m\]]# "
 			fi
 		EOF
 	done
