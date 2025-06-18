@@ -145,10 +145,10 @@ getDiskIDs(){
 }
 
 echo "get all Disk IDs"
-## getDiskIDs
-BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
-POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
-POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
+getDiskIDs
+## BOOT_DISK="ata-VMware_Virtual_SATA_Hard_Drive_00000000000000000001"
+## POOL_DISK1="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_1"
+## POOL_DISK2="nvme-VMware_Virtual_NVMe_Disk_VMware_NVME_0000_2"
 
 debugm "--ok with the above?"
 
@@ -325,11 +325,11 @@ chroot /mnt /bin/bash -x <<-EOCHROOT
 	echo -e '127.0.1.1\t${HOSTNAME}' >> /etc/hosts
 EOCHROOT
 
-debugm "--about to set root password--"
-echo "set root password"
-chroot /mnt /bin/bash -x <<-EOCHROOT
-	printf $ROOT_PASSWORD"\n"$ROOT_PASSWORD | passwd
-EOCHROOT
+#debugm "--about to set root password--"
+#echo "set root password"
+#chroot /mnt /bin/bash -x <<-EOCHROOT
+#	printf $ROOT_PASSWORD"\n"$ROOT_PASSWORD | passwd
+#EOCHROOT
 
 echo "Configure apt. Use other mirrors if you prefer."
 cat <<-EOF > /mnt/etc/apt/sources.list
@@ -361,7 +361,15 @@ EOCHROOT
 
 echo "Install additional not-so-base packages"
 chroot /mnt /bin/bash -x <<-EOCHROOT
-	apt install --no-install-recommends -y wget nano git make man-db
+	apt install --no-install-recommends -y \
+ 	  bash-completion command-not-found cpio cron curl \
+ 	  dosfstools ethtool file fdisk fonts-ubuntu-console ftp \
+	  git gnupg hdparm htop info iptables iputils-tracepath \
+	  libarchive-zip-perl logrotate lshw lsof ltrace \
+	  make man-db manpages nano net-tools p7zip-full p7zip-rar \
+	  parted patch pciutils pollinate rsync show-motd \
+	  software-properties-common sysbench time tmux \
+	  usbutils vim wget xz-utils xxhash zip unzip
 EOCHROOT
 
 ## > [!NOTE]
@@ -397,7 +405,7 @@ echo "  Install openssh-server"
 chroot /mnt /bin/bash -x <<-EOCHROOT
 	apt install -y openssh-server
 	# -- uncomment to permit root login
-	sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
+	# sed -i.bak -E 's/(^#PermitRootLogin )(.*)$/\1\2\nPermitRootLogin yes/g' /etc/ssh/sshd_config
 EOCHROOT
 
 debugm "--about to do locale timezone console fonts--"
