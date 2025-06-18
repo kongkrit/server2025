@@ -257,11 +257,15 @@ zfs create -o com.sun:auto-snapshot=false zroot/var/tmp
 zfs create -o com.sun:auto-snapshot=false zroot/var/lib/docker
 zfs create -o com.sun:auto-snapshot=false zroot/var/lib/containers
 chmod 1777 /var/tmp
+sleep 2
 
 ## > [!NOTE]
 ## > It is important to set the property canmount=noauto on any file systems with mountpoint=/ (that is, on any additional boot environments you create). Without this property, the OS will attempt to automount all ZFS file systems and fail when multiple file systems attempt to mount at /; this will prevent your system from booting. Automatic mounting of / is not required because the root file system is explicitly mounted in the boot process.
 ## >
 ## > Also note that, unlike many ZFS properties, canmount is not inheritable. Therefore, setting canmount=noauto on zroot/ROOT is not sufficient, as any subsequent boot environments you create will default to canmount=on. It is necessary to explicitly set the canmount=noauto on every boot environment you create.
+
+echo "check who is using /var"
+lsof +D /var
 
 echo "Export, then re-import with a temporary mountpoint of /mnt"
 zfs list -H -o name -t filesystem | grep ^zroot/var | sort -r | xargs -n1 zfs unmount
